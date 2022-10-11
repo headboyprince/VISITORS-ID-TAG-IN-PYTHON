@@ -1,0 +1,75 @@
+# ALL THE MODULES NEEDED
+import pandas as pd
+import re  # import the re library
+from PIL import Image,\
+ImageDraw, ImageFont  # import the PIL library, from the PIL Library import the
+# image draw, the image and the image font library
+
+import time  # import the time library
+from datetime import datetime  # import the datetime library
+
+
+# %%
+def isValid(Phone):  # function to check if the phone number is a valid phone number
+   # 1) Begins with 0, 1 or 91
+   # 2) Then contains 7 or 8 or 9.
+   # 3) Then contains 9 digits
+   Pattern = re.compile("(0|1|91)?[7-9][0-9]{9}")
+   return Pattern.match(Phone)
+
+
+Name = input("Enter your name: ")  # Name input box
+Purpose = input("Enter your purpose [hint: "
+               "1 - interview,"
+               "2 - meeting,"
+               "3 - personal]: ")  # Purpose input box
+
+Phone = input("Enter your telephone digits: ")  # Phone number input box
+
+while not (isValid(Phone)):  # loop that to keep requesting for phone number until
+                                               # the correct phone number is entered.
+
+   print("invalid phone number") # The message that will be printed out on the screen
+                                                   # if an invalid number is entered.
+
+   Phone = input("Enter your telephone digits: ") #the loop will ask for the phone number again
+                                                               # if an invalid number is entered.
+
+photo = input("Enter image name: ")
+# enter the exact name of the image,
+# also make sure it's stored in the photos folder.
+# %%
+font = ImageFont.truetype("tempate-card-generator-master/OpenSans-Semibold.ttf",
+                         size=25)  # the font used to layer the text on the card
+# %%
+template = Image.open("card visitors.JPG")
+# the template for the visitors card tag
+
+pic = Image.open(f"template-card-generator-master/photos/{photo}.jpg").resize((175, 221),
+                                                                            Image.ANTIALIAS)
+# IMAGE BOX for the image to be posted on the template
+
+template.paste(pic, (534, 134, 709, 355)) #the image on each card
+draw = ImageDraw.Draw(template)  # calling the draw function
+draw.text((144, 101), Name, font=font, fill='black')  # Name box
+draw.text((181, 185), Purpose, font=font, fill='black')  # Purpose box
+draw.text((183, 380), Phone, font=font, fill='black')  # Phone box
+
+
+current_time = time.strftime("%H:%M", time.localtime())
+# function for the current time
+
+current_date = datetime.now().date()
+# function for the exact date
+
+draw.text((589, 384), str(current_time), font=font, fill='black')  # current time
+draw.text((590, 82), str(current_date), font=font, fill='black')  # current date
+
+# FOR THE IMAGE BOX
+# (534, 134) #top right hand corner
+# -(709, 355) #bottom right hand corner
+# =(175, 221)
+
+
+template.save(f"template-card-generator-master/cards/{Name}.jpg")
+# saving the template file with the name
